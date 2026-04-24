@@ -1,0 +1,923 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $http) {
+    var c = this;
+
+    // Instance ID - populated by server script
+    c.instanceId = c.data.instanceId || 'UNKNOWN';
+    var baseUrl = 'https://' + c.instanceId + '.service-now.com';
+
+    // State
+    c.os = 'mac';
+    c.openLab = null;
+    c.executing = false;
+    c.showOAuthPanel = false;
+
+    // OAuth credentials (entered by student)
+    c.oauthCreds = {
+        integration: {
+            clientId: '',
+            clientSecret: '',
+            accessToken: ''
+        },
+        integrationAdmin: {
+            clientId: '',
+            clientSecret: '',
+            accessToken: ''
+        }
+    };
+
+    // ---- Lab and Test definitions ----
+    c.labs = [{
+            id: 'lab1',
+            num: 1,
+            title: 'Table settings',
+            tests: [{
+                    id: '1a',
+                    description: 'Test access to the Table API for the Vehicle table',
+                    method: 'GET',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration',
+                    endpoint: '/api/now/table/x_snc_vehicle_ma_0_vehicle?sysparm_limit=1'
+                },
+                {
+                    id: '1b',
+                    description: 'Test access to the Vehicles API for the Vehicle table',
+                    method: 'GET',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                }
+            ]
+        },
+        {
+            id: 'lab2',
+            num: 2,
+            title: 'Access controls I',
+            tests: [{
+                    id: '2a',
+                    description: 'Test access to the Vehicles API for vehicle.user',
+                    method: 'GET',
+                    authType: 'basic',
+                    authUser: 'vehicle.user',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                },
+                {
+                    id: '2b',
+                    description: 'Test access to the Vehicles API for vehicle.integration',
+                    method: 'GET',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                }
+            ]
+        },
+        {
+            id: 'lab3',
+            num: 3,
+            title: 'Access controls II',
+            tests: [{
+                    id: '3a',
+                    description: 'Test Get Vehicle (v2) for vehicle.integration',
+                    method: 'GET',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                },
+                {
+                    id: '3b',
+                    description: 'Test Get Vehicle (v2) for vehicle.integration_admin',
+                    method: 'GET',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration_admin',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                },
+                {
+                    id: '3c',
+                    description: 'Test Create Vehicles (v2) for vehicle.integration',
+                    method: 'POST',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicles',
+                    body: {
+                        mac: {
+                            "vehicles": [{
+                                "make": "Studebaker",
+                                "model": "Avanti",
+                                "vin": "WAUPFAFMXBA262342",
+                                "year": "1964",
+                                "country": "India",
+                                "city": "Bangalore"
+                            }]
+                        },
+                        win: {
+                            "vehicles": [{
+                                "make": "Peugeot",
+                                "model": "308",
+                                "vin": "FRAPFA4IXCB067223",
+                                "year": "2024",
+                                "country": "France",
+                                "city": "Paris"
+                            }]
+                        }
+                    }
+                },
+                {
+                    id: '3d',
+                    description: 'Test Create Vehicles (v2) for vehicle.integration_admin',
+                    method: 'POST',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration_admin',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicles',
+                    body: {
+                        mac: {
+                            "vehicles": [{
+                                "make": "Studebaker",
+                                "model": "Avanti",
+                                "vin": "WAUPFAFMXBA262342",
+                                "year": "1964",
+                                "country": "India",
+                                "city": "Bangalore"
+                            }]
+                        },
+                        win: {
+                            "vehicles": [{
+                                "make": "Peugeot",
+                                "model": "308",
+                                "vin": "FRAPFA4IXCB067223",
+                                "year": "2024",
+                                "country": "France",
+                                "city": "Paris"
+                            }]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            id: 'lab4',
+            num: 4,
+            title: 'Access controls III',
+            tests: [{
+                    id: '4a',
+                    description: 'Test Get Vehicle (v2) and access to PIN for vehicle.integration',
+                    method: 'GET',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                },
+                {
+                    id: '4b',
+                    description: 'Test Get Vehicle (v2) and access to PIN for vehicle.integration_admin',
+                    method: 'GET',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration_admin',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                }
+            ]
+        },
+        {
+            id: 'lab5',
+            num: 5,
+            title: 'OAuth 2.0',
+            tests: [{
+                    id: '5a',
+                    description: 'Request an access token for vehicle.integration',
+                    method: 'POST',
+                    authType: 'oauth_token_request',
+                    oauthProfile: 'integration',
+                    endpoint: '/oauth_token.do'
+                },
+                {
+                    id: '5b',
+                    description: 'Test Get Vehicle (v3) with access token',
+                    method: 'GET',
+                    authType: 'bearer',
+                    oauthProfile: 'integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                }
+            ]
+        },
+        {
+            id: 'lab6',
+            num: 6,
+            title: 'Authentication scopes',
+            tests: [{
+                    id: '6a',
+                    description: 'Request a new access token for vehicle.integration associated with authentication scopes',
+                    method: 'POST',
+                    authType: 'oauth_token_request',
+                    oauthProfile: 'integration',
+                    endpoint: '/oauth_token.do'
+                },
+                {
+                    id: '6b',
+                    description: 'Test Get Vehicle (v3) with a new access token associated to authentication scopes',
+                    method: 'GET',
+                    authType: 'bearer',
+                    oauthProfile: 'integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                },
+                {
+                    id: '6c',
+                    description: 'Test Delete Vehicle (v3) with a read and update access token',
+                    method: 'DELETE',
+                    authType: 'bearer',
+                    oauthProfile: 'integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/WAUPFAFMXBA262342'
+                },
+                {
+                    id: '6d.i',
+                    description: 'Request a new access token for vehicle.integration_admin',
+                    method: 'POST',
+                    authType: 'oauth_token_request',
+                    oauthProfile: 'integrationAdmin',
+                    endpoint: '/oauth_token.do'
+                },
+                {
+                    id: '6d.ii',
+                    description: 'Test Delete Vehicle (v3) with a create and delete access token',
+                    method: 'DELETE',
+                    authType: 'bearer',
+                    oauthProfile: 'integrationAdmin',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/WAUPFAFMXBA262342'
+                }
+            ]
+        },
+        {
+            id: 'lab7',
+            num: 7,
+            title: 'API Access Policies',
+            tests: [{
+                    id: '7a',
+                    description: 'Test Get Vehicle (v3) with access token',
+                    method: 'GET',
+                    authType: 'bearer',
+                    oauthProfile: 'integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                },
+                {
+                    id: '7b',
+                    description: 'Test Get Vehicle (v3) using basic authentication',
+                    method: 'GET',
+                    authType: 'basic',
+                    authUser: 'vehicle.integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/137FA90341E600811'
+                }
+            ]
+        },
+        {
+            id: 'lab8',
+            num: 8,
+            title: 'API rate limits',
+            tests: [{
+                id: '8',
+                description: 'Test Get Vehicle (v3). Execute test more than once',
+                method: 'GET',
+                authType: 'bearer',
+                oauthProfile: 'integration',
+                endpoint: '/api/x_snc_vehicle_ma_0/v3/vehicles_api/vehicle/137FA90341E600811'
+            }]
+        },
+        {
+            id: 'lab9',
+            num: 9,
+            title: 'Disable deprecated versions',
+            tests: [{
+                    id: '9a',
+                    description: 'Test Get Vehicle (v3)',
+                    method: 'GET',
+                    authType: 'bearer',
+                    oauthProfile: 'integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/v3/vehicles_api/vehicle/137FA90341E600811'
+                },
+                {
+                    id: '9b',
+                    description: 'Test Get Vehicle (v1)',
+                    method: 'GET',
+                    authType: 'bearer',
+                    oauthProfile: 'integration',
+                    endpoint: '/api/x_snc_vehicle_ma_0/v1/vehicles_api/vehicle/137FA90341E600811'
+                }
+            ]
+        }
+    ];
+
+    // ---- OS toggle ----
+    c.setOS = function(os) {
+        c.os = os;
+    };
+
+    // ---- Lab accordion ----
+    c.toggleLab = function(labId) {
+        if (c.openLab === labId) {
+            c.openLab = null;
+            c.showOAuthPanel = false;
+        } else {
+            c.openLab = labId;
+            var labNum = 0;
+            c.labs.forEach(function(lab) {
+                if (lab.id === labId) labNum = lab.num;
+            });
+            c.showOAuthPanel = labNum >= 5;
+        }
+    };
+
+    // ---- Password lookup ----
+    var passwords = {
+        'vehicle.user': 'restapi9',
+        'vehicle.admin': 'restapi9',
+        'vehicle.integration': 'restapi9',
+        'vehicle.integration_admin': 'restapi9'
+    };
+
+    // ---- Command generation ----
+    c.getCommand = function(test) {
+        if (c.os === 'mac') {
+            return buildMacCommand(test);
+        } else {
+            return buildWinCommand(test);
+        }
+    };
+
+    function buildMacCommand(test) {
+        var url = baseUrl + test.endpoint;
+
+        if (test.authType === 'oauth_token_request') {
+            var profile = test.oauthProfile === 'integrationAdmin' ? 'integrationAdmin' : 'integration';
+            var cid = c.oauthCreds[profile].clientId || '&lt;client_id_' + (profile === 'integrationAdmin' ? 'integration_admin' : 'integration') + '&gt;';
+            var csec = c.oauthCreds[profile].clientSecret || '&lt;client_secret_' + (profile === 'integrationAdmin' ? 'integration_admin' : 'integration') + '&gt;';
+            return "curl -X POST '" + url + "' \\\n" +
+                "--data-urlencode 'grant_type=client_credentials' \\\n" +
+                "--data-urlencode 'client_id=" + cid + "' \\\n" +
+                "--data-urlencode 'client_secret=" + csec + "'";
+        }
+
+        if (test.authType === 'bearer') {
+            var profile = test.oauthProfile === 'integrationAdmin' ? 'integrationAdmin' : 'integration';
+            var token = c.oauthCreds[profile].accessToken || '&lt;access_token_' + (profile === 'integrationAdmin' ? 'integration_admin' : 'integration') + '&gt;';
+            return "curl -X " + test.method + " '" + url + "' \\\n" +
+                "--header 'Authorization: Bearer " + token + "'";
+        }
+
+        var cmd = "curl '" + url + "' \\\n--request " + test.method + " \\\n--user '" + test.authUser + ":" + passwords[test.authUser] + "'";
+
+        if (test.body) {
+            var bodyData = test.body.mac || test.body;
+            cmd += " \\\n--header 'Content-Type: application/json' \\\n--data '" + JSON.stringify(bodyData, null, 4) + "'";
+        }
+
+        return cmd;
+    }
+
+    function buildWinCommand(test) {
+        var url = baseUrl + test.endpoint;
+
+        if (test.authType === 'oauth_token_request') {
+            var profile = test.oauthProfile === 'integrationAdmin' ? 'integrationAdmin' : 'integration';
+            var cid = c.oauthCreds[profile].clientId || '&lt;client_id_' + (profile === 'integrationAdmin' ? 'integration_admin' : 'integration') + '&gt;';
+            var csec = c.oauthCreds[profile].clientSecret || '&lt;client_secret_' + (profile === 'integrationAdmin' ? 'integration_admin' : 'integration') + '&gt;';
+            return "curl.exe -X POST '" + url + "' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=" + cid + "' --data-urlencode 'client_secret=" + csec + "'";
+        }
+
+        if (test.authType === 'bearer') {
+            var profile = test.oauthProfile === 'integrationAdmin' ? 'integrationAdmin' : 'integration';
+            var token = c.oauthCreds[profile].accessToken || '&lt;access_token_' + (profile === 'integrationAdmin' ? 'integration_admin' : 'integration') + '&gt;';
+            return "curl.exe -X " + test.method + " '" + url + "' --header 'Authorization: Bearer " + token + "'";
+        }
+
+        if (test.body) {
+            var bodyData = test.body.win || test.body;
+            var jsonStr = JSON.stringify(bodyData);
+            var escapedJson = jsonStr.replace(/"/g, '""');
+            return 'curl.exe --% "' + url + '" --request ' + test.method + ' --header "Content-Type: application/json" --user "' + test.authUser + ':' + passwords[test.authUser] + '" --data "' + escapedJson + '"';
+        }
+
+        return "curl.exe '" + url + "' --request " + test.method + " --user '" + test.authUser + ":" + passwords[test.authUser] + "'";
+    }
+
+    // ---- Copy to clipboard ----
+    c.copyCommand = function(test, $event) {
+        var cmd = c.getCommand(test);
+        var textarea = document.createElement('textarea');
+        textarea.value = cmd;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        var btn = $event.currentTarget;
+        var originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fa fa-check"></i> Copied!';
+        setTimeout(function() {
+            btn.innerHTML = originalHTML;
+        }, 1500);
+    };
+
+    // ---- Test execution ----
+    c.executeTest = function(test) {
+        c.executing = true;
+        test.result = null;
+
+        var payload = {
+            action: 'execute_test',
+            method: test.method,
+            endpoint: test.endpoint,
+            authType: test.authType
+        };
+
+        if (test.authType === 'basic') {
+            payload.username = test.authUser;
+            payload.password = passwords[test.authUser];
+        } else if (test.authType === 'oauth_token_request') {
+            var profile = test.oauthProfile === 'integrationAdmin' ? 'integrationAdmin' : 'integration';
+            payload.clientId = c.oauthCreds[profile].clientId;
+            payload.clientSecret = c.oauthCreds[profile].clientSecret;
+            if (!payload.clientId || !payload.clientSecret) {
+                test.result = {
+                    error: true,
+                    status: 'N/A',
+                    body: 'ERROR: Please enter the Client ID and Client Secret in the OAuth Credentials panel above before requesting a token.'
+                };
+                c.executing = false;
+                return;
+            }
+        } else if (test.authType === 'bearer') {
+            var profile = test.oauthProfile === 'integrationAdmin' ? 'integrationAdmin' : 'integration';
+            payload.accessToken = c.oauthCreds[profile].accessToken;
+            if (!payload.accessToken) {
+                test.result = {
+                    error: true,
+                    status: 'N/A',
+                    body: 'ERROR: No access token available. Run the token request test first (e.g., Test 5a or 6a) to obtain a token, or paste one into the OAuth Credentials panel.'
+                };
+                c.executing = false;
+                return;
+            }
+        }
+
+        if (test.body) {
+            payload.body = JSON.stringify(test.body.mac || test.body);
+        }
+
+        c.server.get(payload).then(function(response) {
+            var data = response.data || response;
+            var responseBody = data.responseBody || '';
+
+            try {
+                var parsed = JSON.parse(responseBody);
+                responseBody = JSON.stringify(parsed, null, 2);
+            } catch (e) {}
+
+            test.result = {
+                status: data.statusCode || 'Unknown',
+                body: responseBody,
+                error: false
+            };
+
+            if (test.authType === 'oauth_token_request') {
+                try {
+                    var tokenResponse = JSON.parse(data.responseBody || responseBody);
+                    if (tokenResponse.access_token) {
+                        var profile = test.oauthProfile === 'integrationAdmin' ? 'integrationAdmin' : 'integration';
+                        c.oauthCreds[profile].accessToken = tokenResponse.access_token;
+                    }
+                } catch (e) {}
+            }
+
+            c.executing = false;
+        });
+    };
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.snu-lab-helper {&#13;
+    max-width: 960px;&#13;
+    margin: 0 auto;&#13;
+    padding: 20px;&#13;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;&#13;
+}&#13;
+.snu-header {&#13;
+    text-align: center;&#13;
+    margin-bottom: 24px;&#13;
+    padding-bottom: 16px;&#13;
+    border-bottom: 2px solid #e0e0e0;&#13;
+}&#13;
+.snu-header h1 {&#13;
+    font-size: 24px;&#13;
+    font-weight: 600;&#13;
+    color: #022D43;&#13;
+    margin-bottom: 4px;&#13;
+}&#13;
+.snu-subtitle {&#13;
+    font-size: 14px;&#13;
+    color: #666;&#13;
+    margin: 0;&#13;
+}&#13;
+.snu-os-toggle {&#13;
+    text-align: center;&#13;
+    margin-bottom: 20px;&#13;
+}&#13;
+.snu-os-toggle .btn {&#13;
+    min-width: 160px;&#13;
+    margin: 0 4px;&#13;
+}&#13;
+.snu-oauth-panel {&#13;
+    background: #f8f9fa;&#13;
+    border: 1px solid #dee2e6;&#13;
+    border-radius: 6px;&#13;
+    padding: 16px 20px;&#13;
+    margin-bottom: 20px;&#13;
+}&#13;
+.snu-oauth-panel h3 {&#13;
+    font-size: 16px;&#13;
+    font-weight: 600;&#13;
+    margin-top: 0;&#13;
+    margin-bottom: 8px;&#13;
+    color: #022D43;&#13;
+}&#13;
+.snu-oauth-panel h4 {&#13;
+    font-size: 14px;&#13;
+    font-weight: 600;&#13;
+    margin-top: 12px;&#13;
+    margin-bottom: 8px;&#13;
+    color: #495057;&#13;
+}&#13;
+.snu-oauth-panel .snu-note {&#13;
+    font-size: 13px;&#13;
+    color: #6c757d;&#13;
+    margin-bottom: 12px;&#13;
+}&#13;
+.snu-oauth-panel .form-group {&#13;
+    margin-bottom: 8px;&#13;
+}&#13;
+.snu-oauth-panel label {&#13;
+    font-size: 12px;&#13;
+    font-weight: 500;&#13;
+    color: #495057;&#13;
+    margin-bottom: 2px;&#13;
+}&#13;
+.snu-labs .panel {&#13;
+    border-radius: 4px;&#13;
+    margin-bottom: 4px;&#13;
+}&#13;
+.snu-lab-heading {&#13;
+    cursor: pointer;&#13;
+    padding: 12px 16px !important;&#13;
+    background: #022D43 !important;&#13;
+    color: #fff !important;&#13;
+    border: none !important;&#13;
+    transition: background 0.15s;&#13;
+}&#13;
+.snu-lab-heading:hover {&#13;
+    background: #033B58 !important;&#13;
+}&#13;
+.snu-lab-heading .panel-title {&#13;
+    font-size: 15px;&#13;
+    font-weight: 500;&#13;
+    color: #fff;&#13;
+}&#13;
+.snu-lab-heading .panel-title .fa {&#13;
+    margin-right: 8px;&#13;
+    width: 12px;&#13;
+    text-align: center;&#13;
+}&#13;
+.snu-test {&#13;
+    margin-bottom: 20px;&#13;
+    padding-bottom: 20px;&#13;
+    border-bottom: 1px solid #eee;&#13;
+}&#13;
+.snu-test:last-child {&#13;
+    margin-bottom: 0;&#13;
+    padding-bottom: 0;&#13;
+    border-bottom: none;&#13;
+}&#13;
+.snu-test-header {&#13;
+    display: flex;&#13;
+    align-items: center;&#13;
+    gap: 10px;&#13;
+    margin-bottom: 10px;&#13;
+}&#13;
+.snu-test-id {&#13;
+    font-weight: 700;&#13;
+    font-size: 14px;&#13;
+    color: #022D43;&#13;
+    white-space: nowrap;&#13;
+}&#13;
+.snu-test-desc {&#13;
+    font-size: 14px;&#13;
+    color: #495057;&#13;
+    flex: 1;&#13;
+}&#13;
+.snu-method-badge {&#13;
+    font-size: 11px;&#13;
+    font-weight: 600;&#13;
+    text-transform: uppercase;&#13;
+}&#13;
+.snu-command-block {&#13;
+    border: 1px solid #d1d5db;&#13;
+    border-radius: 6px;&#13;
+    overflow: hidden;&#13;
+    margin-bottom: 10px;&#13;
+}&#13;
+.snu-command-toolbar {&#13;
+    display: flex;&#13;
+    justify-content: space-between;&#13;
+    align-items: center;&#13;
+    padding: 4px 10px;&#13;
+    background: #f1f3f5;&#13;
+    border-bottom: 1px solid #d1d5db;&#13;
+}&#13;
+.snu-command-label {&#13;
+    font-size: 12px;&#13;
+    font-weight: 500;&#13;
+    color: #6c757d;&#13;
+}&#13;
+.snu-copy-btn {&#13;
+    font-size: 12px;&#13;
+    background-color: #337ab7;&#13;
+    color: #fff;&#13;
+    border: 1px solid #2e6da4;&#13;
+    padding: 5px 10px;&#13;
+    border-radius: 3px;&#13;
+}&#13;
+.snu-copy-btn:hover,&#13;
+.snu-copy-btn:focus {&#13;
+    background-color: #286090;&#13;
+    color: #fff;&#13;
+    border-color: #204d74;&#13;
+}&#13;
+.snu-copy-btn i {&#13;
+    color: #fff;&#13;
+}&#13;
+.snu-command-pre {&#13;
+    background: #1e1e1e;&#13;
+    color: #d4d4d4;&#13;
+    margin: 0;&#13;
+    padding: 12px 14px;&#13;
+    font-size: 13px;&#13;
+    line-height: 1.5;&#13;
+    overflow-x: auto;&#13;
+    white-space: pre-wrap;&#13;
+    word-break: break-all;&#13;
+    border: none;&#13;
+    border-radius: 0;&#13;
+}&#13;
+.snu-test-actions {&#13;
+    display: flex;&#13;
+    align-items: center;&#13;
+    gap: 12px;&#13;
+}&#13;
+.snu-verify-note {&#13;
+    font-size: 12px;&#13;
+}&#13;
+.snu-results {&#13;
+    margin-top: 10px;&#13;
+    border: 1px solid #d1d5db;&#13;
+    border-radius: 6px;&#13;
+    overflow: hidden;&#13;
+}&#13;
+.snu-results-header {&#13;
+    display: flex;&#13;
+    justify-content: space-between;&#13;
+    align-items: center;&#13;
+    padding: 6px 10px;&#13;
+    background: #f8f9fa;&#13;
+    border-bottom: 1px solid #d1d5db;&#13;
+}&#13;
+.snu-results-pre {&#13;
+    background: #fafafa;&#13;
+    color: #333;&#13;
+    margin: 0;&#13;
+    padding: 12px 14px;&#13;
+    font-size: 12px;&#13;
+    line-height: 1.4;&#13;
+    max-height: 400px;&#13;
+    overflow: auto;&#13;
+    border: none;&#13;
+    border-radius: 0;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description>Generates instance-specific curl commands for SNU1024 lab exercises (Labs 1-9). Provides Mac/Windows command variants with copy-to-clipboard and in-browser API test execution via RESTMessageV2 loopback.</description>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>vehicles_api_tests</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Vehicles API Tests</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    // Try multiple approaches to get the instance name
+    var instId = '';
+    
+    // Approach 1: instance_name property
+    instId = gs.getProperty('instance_name') || '';
+    
+    // Approach 2: Parse from glide.servlet.uri
+    if (!instId) {
+        var uri = gs.getProperty('glide.servlet.uri') || '';
+        var match = uri.match(/https?:\/\/([^.]+)/);
+        if (match) {
+            instId = match[1];
+        }
+    }
+    
+    // Approach 3: Parse from current request URL
+    if (!instId) {
+        try {
+            var reqUrl = '';
+            if (typeof g_request !== 'undefined' && g_request) {
+                reqUrl = g_request.getRequestURL() + '';
+            }
+            if (reqUrl) {
+                var urlMatch = reqUrl.match(/https?:\/\/([^.]+)/);
+                if (urlMatch) {
+                    instId = urlMatch[1];
+                }
+            }
+        } catch(e) {}
+    }
+    
+    data.instanceId = instId || 'UNKNOWN';
+
+    if (input && input.action === 'execute_test') {
+        var result = executeApiCall(input);
+        data.statusCode = result.statusCode;
+        data.responseBody = result.responseBody;
+    }
+
+    function executeApiCall(params) {
+        var response = {
+            statusCode: 0,
+            responseBody: ''
+        };
+
+        try {
+            var instanceName = data.instanceId;
+            var fullUrl = 'https://' + instanceName + '.service-now.com' + params.endpoint;
+
+            var rm = new sn_ws.RESTMessageV2();
+            rm.setHttpMethod(params.method || 'GET');
+            rm.setEndpoint(fullUrl);
+            rm.setRequestHeader('Accept', 'application/json');
+
+            if (params.authType === 'basic') {
+                rm.setBasicAuth(params.username, params.password);
+            } else if (params.authType === 'oauth_token_request') {
+                rm.setHttpMethod('POST');
+                rm.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                var tokenBody = 'grant_type=client_credentials' +
+                    '&client_id=' + encodeURIComponent(params.clientId) +
+                    '&client_secret=' + encodeURIComponent(params.clientSecret);
+                rm.setRequestBody(tokenBody);
+            } else if (params.authType === 'bearer') {
+                rm.setRequestHeader('Authorization', 'Bearer ' + params.accessToken);
+            }
+
+            if (params.body && params.authType !== 'oauth_token_request') {
+                rm.setRequestHeader('Content-Type', 'application/json');
+                rm.setRequestBody(params.body);
+            }
+
+            var httpResponse = rm.execute();
+            response.statusCode = httpResponse.getStatusCode();
+            response.responseBody = httpResponse.getBody();
+
+        } catch (e) {
+            response.statusCode = 0;
+            response.responseBody = JSON.stringify({
+                error: true,
+                message: 'Execution error: ' + e.message
+            });
+        }
+
+        return response;
+    }
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-04-24 05:17:42</sys_created_on>
+        <sys_id>fee0c37f5318431033ae56a0a0490ec6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Vehicles API Tests</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sp_widget_fee0c37f5318431033ae56a0a0490ec6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-04-24 05:17:42</sys_updated_on>
+        <template><![CDATA[<div class="snu-lab-helper">
+  <div class="snu-header">
+    <h1>Vehicles API Tests</h1>
+    <p class="snu-subtitle">Instance: <strong>{{c.instanceId}}</strong></p>
+  </div>
+
+  <div class="snu-os-toggle">
+    <button class="btn" ng-class="{'btn-primary': c.os === 'mac', 'btn-default': c.os !== 'mac'}" ng-click="c.setOS('mac')">
+      <i class="fa fa-apple"></i> Mac (zsh)
+    </button>
+    <button class="btn" ng-class="{'btn-primary': c.os === 'win', 'btn-default': c.os !== 'win'}" ng-click="c.setOS('win')">
+      <i class="fa fa-windows"></i> Windows (PowerShell)
+    </button>
+  </div>
+
+  <div class="snu-oauth-panel" ng-if="c.showOAuthPanel">
+    <h3><i class="fa fa-key"></i> OAuth Credentials</h3>
+    <p class="snu-note">Labs 5-9 require OAuth tokens. Enter your client credentials from the OAuth Application Registry below. These values are stored in your browser session only.</p>
+    <div class="row">
+      <div class="col-md-6">
+        <h4>vehicle.integration</h4>
+        <div class="form-group">
+          <label>Client ID</label>
+          <input type="text" class="form-control input-sm" ng-model="c.oauthCreds.integration.clientId" placeholder="Paste client_id here">
+        </div>
+        <div class="form-group">
+          <label>Client Secret</label>
+          <input type="password" class="form-control input-sm" ng-model="c.oauthCreds.integration.clientSecret" placeholder="Paste client_secret here">
+        </div>
+        <div class="form-group">
+          <label>Access Token <span class="text-muted">(auto-populated after Test 5a / 6a)</span></label>
+          <input type="text" class="form-control input-sm" ng-model="c.oauthCreds.integration.accessToken" placeholder="Will be populated when you request a token">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h4>vehicle.integration_admin</h4>
+        <div class="form-group">
+          <label>Client ID</label>
+          <input type="text" class="form-control input-sm" ng-model="c.oauthCreds.integrationAdmin.clientId" placeholder="Paste client_id here">
+        </div>
+        <div class="form-group">
+          <label>Client Secret</label>
+          <input type="password" class="form-control input-sm" ng-model="c.oauthCreds.integrationAdmin.clientSecret" placeholder="Paste client_secret here">
+        </div>
+        <div class="form-group">
+          <label>Access Token <span class="text-muted">(auto-populated after Test 6d.i)</span></label>
+          <input type="text" class="form-control input-sm" ng-model="c.oauthCreds.integrationAdmin.accessToken" placeholder="Will be populated when you request a token">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-group snu-labs" id="labAccordion">
+    <div class="panel panel-default" ng-repeat="lab in c.labs track by lab.id">
+      <div class="panel-heading snu-lab-heading" ng-click="c.toggleLab(lab.id)">
+        <h3 class="panel-title">
+          <i class="fa" ng-class="{'fa-chevron-down': c.openLab === lab.id, 'fa-chevron-right': c.openLab !== lab.id}"></i>
+          Lab {{lab.num}}: {{lab.title}}
+        </h3>
+      </div>
+      <div class="panel-collapse" ng-show="c.openLab === lab.id">
+        <div class="panel-body">
+          <div class="snu-test" ng-repeat="test in lab.tests track by test.id">
+            <div class="snu-test-header">
+              <span class="snu-test-id">Test {{test.id}}</span>
+              <span class="snu-test-desc">{{test.description}}</span>
+              <span class="label label-info snu-method-badge">{{test.method}}</span>
+            </div>
+            <div class="snu-command-block">
+              <div class="snu-command-toolbar">
+                <span class="snu-command-label" ng-if="c.os === 'mac'"><i class="fa fa-apple"></i> zsh</span>
+                <span class="snu-command-label" ng-if="c.os === 'win'"><i class="fa fa-windows"></i> PowerShell</span>
+                <button class="btn btn-sm snu-copy-btn" ng-click="c.copyCommand(test, $event)">
+                  <i class="fa fa-clipboard"></i> Copy
+                </button>
+              </div>
+              <pre class="snu-command-pre"><code>{{c.getCommand(test)}}</code></pre>
+            </div>
+            <div class="snu-test-actions">
+              <button class="btn btn-sm btn-success" ng-click="c.executeTest(test)" ng-disabled="c.executing">
+                <i class="fa" ng-class="{'fa-play': !c.executing, 'fa-spinner fa-spin': c.executing}"></i>
+                {{c.executing ? 'Executing...' : 'Test It'}}
+              </button>
+              <span class="text-muted snu-verify-note">
+                <i class="fa fa-info-circle"></i> Executes from the instance (loopback) — use curl for the actual exercise
+              </span>
+            </div>
+            <div class="snu-results" ng-if="test.result">
+              <div class="snu-results-header">
+                <span class="label" ng-class="{'label-success': test.result.status >= 200 && test.result.status < 300, 'label-warning': test.result.status >= 300 && test.result.status < 500, 'label-danger': test.result.status >= 500 || test.result.error}">
+                  {{test.result.error ? 'ERROR' : 'HTTP ' + test.result.status}}
+                </span>
+                <button class="btn btn-xs btn-default" ng-click="test.result = null">
+                  <i class="fa fa-times"></i> Clear
+                </button>
+              </div>
+              <pre class="snu-results-pre"><code>{{test.result.body}}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

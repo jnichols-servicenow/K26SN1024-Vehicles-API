@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_user_role_contains">
+    <sys_user_role_contains action="INSERT_OR_UPDATE">
+        <contains display_value="x_snc_vehicle_ma_0.integration" name="x_snc_vehicle_ma_0.integration">8bb8fe22fd0b32107f44b9211467fe10</contains>
+        <role display_value="x_snc_vehicle_ma_0.integration_admin" name="x_snc_vehicle_ma_0.integration_admin">83b8fe22fd0b32107f44b9211467fe07</role>
+        <sys_class_name>sys_user_role_contains</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-03-24 06:57:10</sys_created_on>
+        <sys_id>ee9077f5203f72107f447165aac45339</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_snc_vehicle_ma_0.integration.x_snc_vehicle_ma_0.integration_admin</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sys_user_role_contains_ee9077f5203f72107f447165aac45339</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-03-24 06:57:10</sys_updated_on>
+    </sys_user_role_contains>
+</record_update>

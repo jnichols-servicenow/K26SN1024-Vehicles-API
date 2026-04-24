@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json,application/xml,text/xml</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>GET</http_method>
+        <name>Get Vehicles</name>
+        <operation_script><![CDATA[(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+
+    // 1. Declare an empty array called 'answer'
+    var answer = [];
+
+    // 2. Save each of the query parameters in a separate variable
+    var make = request.queryParams.make;
+    var model = request.queryParams.model;
+    var year = request.queryParams.year;
+    var country = request.queryParams.country;
+    var city = request.queryParams.city;
+
+    // Generate a 404 error if no query parameters are provided
+    if (!make && !model && !year && !country && !city) {
+        response.setStatus(404);
+        response.setBody({
+            error: {
+                message: 'Query parameters required',
+                detail: 'Please provide at least one query parameter: make, model, year, country, or city'
+            }
+        });
+        return;
+    }
+
+    // 3. Query the x_snc_vehicle_ma_0_vehicle table using the query parameters
+    var vehicleGR = new GlideRecord('x_snc_vehicle_ma_0_vehicle');
+    if (make) {
+        vehicleGR.addQuery('make', make);
+    }
+    if (model) {
+        vehicleGR.addQuery('model', model);
+    }
+    if (year) {
+        vehicleGR.addQuery('year', year);
+    }
+    if (country) {
+        vehicleGR.addQuery('country', country);
+    }
+    if (city) {
+        vehicleGR.addQuery('city', city);
+    }
+    vehicleGR.query();
+
+    // 4. Generate a 404 error message if no vehicles were found
+    if (!vehicleGR.hasNext()) {
+        response.setStatus(404);
+        response.setBody({
+            error: {
+                message: 'No vehicles found',
+                detail: 'No vehicles matched the provided search criteria'
+            }
+        });
+        return;
+    }
+
+    // 5 & 6. For found vehicles, generate JSON objects and push into 'answer' array
+    while (vehicleGR.next()) {
+        var vehicleObj = {
+            make: vehicleGR.getValue('make'),
+            model: vehicleGR.getValue('model'),
+            year: vehicleGR.getValue('year'),
+            vin: vehicleGR.getValue('vin'),
+            country: vehicleGR.getValue('country'),
+            city: vehicleGR.getValue('city'),
+            start_date: vehicleGR.getValue('start_date'),
+            end_date: vehicleGR.getValue('end_date')
+        };
+        answer.push(vehicleObj);
+    }
+
+    // 7. Generate a response body that contains the 'answer' variable
+    response.setBody(answer);
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_snc_vehicle_ma_0/vehicles_api/vehicles</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/vehicles</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-17 23:15:00</sys_created_on>
+        <sys_id>55af76fafd03b2107f44b9211467fe36</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Get Vehicles</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sys_ws_operation_55af76fafd03b2107f44b9211467fe36</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-17 23:22:37</sys_updated_on>
+        <web_service_definition display_value="Vehicles API">c5203636fdcf72107f44b9211467fe03</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

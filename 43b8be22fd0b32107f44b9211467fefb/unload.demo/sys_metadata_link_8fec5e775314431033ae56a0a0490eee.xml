@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_metadata_link">
+    <sys_metadata_link action="INSERT_OR_UPDATE">
+        <directory>unload.demo</directory>
+        <documentkey>85ed4be2fd8b32107f44b9211467fea8</documentkey>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="x_snc_vehicle_ma_0_vehicle">
+    <x_snc_vehicle_ma_0_vehicle action="INSERT_OR_UPDATE">
+        <city>Rüsselsheim</city>
+        <country>Germany</country>
+        <description>est lacinia nisi venenatis tristique fusce congue diam id ornare imperdiet sapien</description>
+        <end_date>1978-04-19</end_date>
+        <make>Opel</make>
+        <model>Kadett</model>
+        <pin>8494</pin>
+        <start_date>1968-05-01</start_date>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-17 05:35:11</sys_created_on>
+        <sys_id>85ed4be2fd8b32107f44b9211467fea8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-17 05:35:11</sys_updated_on>
+        <vin>JH4KA96682C098068</vin>
+        <year>1968</year>
+    </x_snc_vehicle_ma_0_vehicle>
+</record_update>
+]]></payload>
+        <sys_class_name>sys_metadata_link</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-04-24 02:30:49</sys_created_on>
+        <sys_id>8fec5e775314431033ae56a0a0490eee</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Created 2026-02-16 21:35:11</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sys_metadata_link_8fec5e775314431033ae56a0a0490eee</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-04-24 02:30:49</sys_updated_on>
+        <tablename>x_snc_vehicle_ma_0_vehicle</tablename>
+    </sys_metadata_link>
+</record_update>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json,application/xml,text/xml</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>POST</http_method>
+        <name>Create Vehicles</name>
+        <operation_script><![CDATA[(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+
+    // 1. Declare an empty array called 'answer'
+    var answer = [];
+
+    // 2. Declare variables for each of the accepted names in the request body
+    var make, model, vin, year, country, city;
+
+    // 3. Declare a variable called requestBody with an initial value of the request.body object
+    var requestBody = request.body;
+
+    // 4. Declare a variable called requestString, converting request.body to string using dataString()
+    var requestString = request.body.dataString;
+
+    // 5. Declare a variable called result that converts requestString into an array
+    var result = JSON.parse(requestString);
+    try {
+
+        // 6. For every vehicle in the array create a record in the x_snc_vehicle_ma_0_vehicle table
+        for (var i = 0; i < result.vehicles.length; i++) {
+            make = result.vehicles[i].make;
+            model = result.vehicles[i].model;
+            vin = result.vehicles[i].vin;
+            year = result.vehicles[i].year;
+            country = result.vehicles[i].country;
+            city = result.vehicles[i].city;
+            var vehicleGR = new GlideRecord('x_snc_vehicle_ma_0_vehicle');
+            vehicleGR.initialize();
+            vehicleGR.setValue('make', make);
+            vehicleGR.setValue('model', model);
+            vehicleGR.setValue('vin', vin);
+            vehicleGR.setValue('year', year);
+            vehicleGR.setValue('country', country);
+            vehicleGR.setValue('city', city);
+            vehicleGR.insert();
+
+            // 7. For every vehicle create an object with vin and sys_id and push into answer
+            var vehicleObj = {
+                vin: vehicleGR.vin,
+                sys_id: vehicleGR.sys_id
+            };
+            answer.push(vehicleObj);
+        }
+		response.setStatus(201);
+
+        // 8. Generate a response body that contains the 'answer' variable
+        response.setBody({
+            answer: answer
+        });
+    } catch (ex) {
+
+        // 9. If an error occurs, generate a 500 HTTP error with a generic message
+        response.setStatus(500);
+        response.setBody({
+            error: {
+                message: 'Internal Server Error',
+                detail: 'An error occurred while processing the request'
+            }
+        });
+    }
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_snc_vehicle_ma_0/vehicles_api/vehicles</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/vehicles</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-17 23:23:46</sys_created_on>
+        <sys_id>b8c1c77efd8f72107f44b9211467fe86</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Create Vehicles</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sys_ws_operation_b8c1c77efd8f72107f44b9211467fe86</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-17 23:23:46</sys_updated_on>
+        <web_service_definition display_value="Vehicles API">c5203636fdcf72107f44b9211467fe03</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

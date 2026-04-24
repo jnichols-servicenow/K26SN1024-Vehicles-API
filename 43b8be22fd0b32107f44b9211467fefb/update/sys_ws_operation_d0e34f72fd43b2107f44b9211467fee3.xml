@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json,application/xml,text/xml</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>PATCH</http_method>
+        <name>Update Vehicle</name>
+        <operation_script><![CDATA[(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+
+    // 1. Declare an empty array called 'answer'
+    var answer = [];
+
+    // 2. Declare a variable called 'vin', equal to the vin from the path parameter6
+    var vin = request.pathParams.vin;
+
+    // 3. Declare a variable called 'requestBody', equal to request.body.data
+    var requestBody = request.body.data;
+
+    // 4. Declare variables equal to the values provided in the request body
+    var make = requestBody.make;
+    var model = requestBody.model;
+    var year = requestBody.year;
+    var country = requestBody.country;
+    var city = requestBody.city;
+
+    // 5. Generate an error message and a 404 if no vin is provided
+    if (!vin || vin === 'undefined' || vin === 'null') {
+        response.setStatus(404);
+        response.setBody({
+            error: {
+                message: 'VIN parameter is required',
+                detail: 'Please provide a VIN in the request path'
+            }
+        });
+        return;
+    }
+
+    // 6. Generate an error message and a 404 if the request body contains none of the accepted data
+    if (!make && !model && !year && !country && !city) {
+        response.setStatus(404);
+        response.setBody({
+            error: {
+                message: 'Request body data is required',
+                detail: 'Please provide at least one field to update: make, model, year, country, or city'
+            }
+        });
+        return;
+    }
+
+    // 7. Perform a GlideRecord query of the x_snc_vehicle_ma_0_vehicle table using the vin
+    var vehicleGR = new GlideRecord('x_snc_vehicle_ma_0_vehicle');
+    vehicleGR.addQuery('vin', vin);
+    vehicleGR.query();
+
+    // 8. Generate an error message and a 404 if no vehicle is found
+    if (!vehicleGR.next()) {
+        response.setStatus(404);
+        response.setBody({
+            error: {
+                message: 'Vehicle not found',
+                detail: 'No vehicle found with VIN: ' + vin
+            }
+        });
+        return;
+    }
+
+    // 9. If a vehicle record is found, update it using the variables from Step 4
+    if (make) {
+        vehicleGR.setValue('make', make);
+    }
+    if (model) {
+        vehicleGR.setValue('model', model);
+    }
+    if (year) {
+        vehicleGR.setValue('year', year);
+    }
+    if (country) {
+        vehicleGR.setValue('country', country);
+    }
+    if (city) {
+        vehicleGR.setValue('city', city);
+    }
+
+    vehicleGR.update();
+
+    // 10. If the update was successful: set status to 200 and create response object
+    response.setStatus(200);
+
+    var vehicleObj = {
+        make: vehicleGR.getValue('make'),
+        model: vehicleGR.getValue('model'),
+        vin: vehicleGR.getValue('vin'),
+        year: vehicleGR.getValue('year'),
+        country: vehicleGR.getValue('country'),
+        city: vehicleGR.getValue('city'),
+        sys_id: vehicleGR.getUniqueValue()
+    };
+
+    answer.push(vehicleObj);
+
+    response.setBody({
+        answer: answer
+    });
+
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_snc_vehicle_ma_0/vehicles_api/vehicle/{vin}</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/vehicle/{vin}</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-17 23:36:20</sys_created_on>
+        <sys_id>d0e34f72fd43b2107f44b9211467fee3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Update Vehicle</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sys_ws_operation_d0e34f72fd43b2107f44b9211467fee3</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-17 23:36:20</sys_updated_on>
+        <web_service_definition display_value="Vehicles API">c5203636fdcf72107f44b9211467fe03</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

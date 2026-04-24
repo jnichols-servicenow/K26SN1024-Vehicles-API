@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_metadata_link">
+    <sys_metadata_link action="INSERT_OR_UPDATE">
+        <directory>unload.demo</directory>
+        <documentkey>993e0326fd8b32107f44b9211467fec5</documentkey>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="x_snc_vehicle_ma_0_vehicle">
+    <x_snc_vehicle_ma_0_vehicle action="INSERT_OR_UPDATE">
+        <city>Tokyo</city>
+        <country>Japan</country>
+        <description>vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean</description>
+        <end_date>1992-09-26</end_date>
+        <make>Toyota</make>
+        <model>Landcruiser</model>
+        <pin>3235</pin>
+        <start_date>1984-07-16</start_date>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-17 05:36:37</sys_created_on>
+        <sys_id>993e0326fd8b32107f44b9211467fec5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-17 05:36:37</sys_updated_on>
+        <vin>1D7CW5GKXAS838127</vin>
+        <year>1984</year>
+    </x_snc_vehicle_ma_0_vehicle>
+</record_update>
+]]></payload>
+        <sys_class_name>sys_metadata_link</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-04-24 02:30:49</sys_created_on>
+        <sys_id>8bec9e775314431033ae56a0a0490e0b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Created 2026-02-16 21:36:37</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sys_metadata_link_8bec9e775314431033ae56a0a0490e0b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-04-24 02:30:49</sys_updated_on>
+        <tablename>x_snc_vehicle_ma_0_vehicle</tablename>
+    </sys_metadata_link>
+</record_update>

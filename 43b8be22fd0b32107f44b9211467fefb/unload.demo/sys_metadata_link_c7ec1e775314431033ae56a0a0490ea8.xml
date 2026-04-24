@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_metadata_link">
+    <sys_metadata_link action="INSERT_OR_UPDATE">
+        <directory>unload.demo</directory>
+        <documentkey>37840b66fd4b32107f44b9211467fe33</documentkey>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="x_snc_vehicle_ma_0_vehicle">
+    <x_snc_vehicle_ma_0_vehicle action="INSERT_OR_UPDATE">
+        <city>Guangzhou</city>
+        <country>China</country>
+        <description>pharetra magna ac consequat metus sapien ut nunc vestibulum ante ipsum primis</description>
+        <end_date/>
+        <make>BYD</make>
+        <model>Shark</model>
+        <pin>6487</pin>
+        <start_date>2025-06-01</start_date>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-17 04:54:06</sys_created_on>
+        <sys_id>37840b66fd4b32107f44b9211467fe33</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-17 04:54:06</sys_updated_on>
+        <vin>WAUUL78E76A421585</vin>
+        <year>2025</year>
+    </x_snc_vehicle_ma_0_vehicle>
+</record_update>
+]]></payload>
+        <sys_class_name>sys_metadata_link</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-04-24 02:30:48</sys_created_on>
+        <sys_id>c7ec1e775314431033ae56a0a0490ea8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Created 2026-02-16 20:54:06</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sys_metadata_link_c7ec1e775314431033ae56a0a0490ea8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-04-24 02:30:48</sys_updated_on>
+        <tablename>x_snc_vehicle_ma_0_vehicle</tablename>
+    </sys_metadata_link>
+</record_update>

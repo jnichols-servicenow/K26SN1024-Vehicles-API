@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_metadata_link">
+    <sys_metadata_link action="INSERT_OR_UPDATE">
+        <directory>unload.demo</directory>
+        <documentkey>542547a6fd4b32107f44b9211467fe98</documentkey>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="x_snc_vehicle_ma_0_vehicle">
+    <x_snc_vehicle_ma_0_vehicle action="INSERT_OR_UPDATE">
+        <city>Detroit</city>
+        <country>United States</country>
+        <description>accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a</description>
+        <end_date/>
+        <make>Dodge</make>
+        <model>Ram 1500</model>
+        <pin>9632</pin>
+        <start_date>2021-07-29</start_date>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-17 04:57:53</sys_created_on>
+        <sys_id>542547a6fd4b32107f44b9211467fe98</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-17 04:57:53</sys_updated_on>
+        <vin>1GTN1TEX1DZ268860</vin>
+        <year>2021</year>
+    </x_snc_vehicle_ma_0_vehicle>
+</record_update>
+]]></payload>
+        <sys_class_name>sys_metadata_link</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-04-24 02:30:48</sys_created_on>
+        <sys_id>83ec5e775314431033ae56a0a0490ee7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Created 2026-02-16 20:57:53</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sys_metadata_link_83ec5e775314431033ae56a0a0490ee7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-04-24 02:30:48</sys_updated_on>
+        <tablename>x_snc_vehicle_ma_0_vehicle</tablename>
+    </sys_metadata_link>
+</record_update>

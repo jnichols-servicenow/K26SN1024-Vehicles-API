@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_row">
+    <sp_row action="INSERT_OR_UPDATE">
+        <class_name/>
+        <order>100</order>
+        <semantic_tag/>
+        <sp_column/>
+        <sp_container display_value="SNU1024 Lab Helper - Container 100">74ef963f5314431033ae56a0a0490ec6</sp_container>
+        <sys_class_name>sp_row</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-04-24 02:43:47</sys_created_on>
+        <sys_id>0defd63f5314431033ae56a0a0490e2c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>100</sys_name>
+        <sys_package display_value="Vehicle Management" source="x_snc_vehicle_ma_0">43b8be22fd0b32107f44b9211467fefb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Vehicle Management">43b8be22fd0b32107f44b9211467fefb</sys_scope>
+        <sys_update_name>sp_row_0defd63f5314431033ae56a0a0490e2c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-04-24 02:43:47</sys_updated_on>
+    </sp_row>
+</record_update>
