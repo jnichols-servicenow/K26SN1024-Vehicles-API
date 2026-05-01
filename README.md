@@ -108,7 +108,7 @@ After the import completes, confirm the application is working:
 
 The full lab guide for **SNU1024: REST API Security and Integration** is published on GitBook:
 
-📖 **[SNU1024 Lab Guide — GitBook](#)** <!-- TODO: replace # with the actual GitBook URL -->
+📖 [SNU1024 Lab Guide — GitBook](https://app.gitbook.com/o/wXJhB7H8YqI7f2lOgBuI/s/zOTeBR9y3RlMJ4cIdPem/)
 
 The GitBook covers all nine labs:
 
