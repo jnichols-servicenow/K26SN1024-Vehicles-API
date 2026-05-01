@@ -128,7 +128,7 @@ The GitBook covers all nine labs:
 
 This is sample educational content and is provided **as-is** with no guarantee of support. Please fork to your own account for lab use. Pull requests are not accepted.
 
-- For questions about the lab content, refer to the [GitBook](#). <!-- TODO: update link -->
+- For questions about the lab content, refer to the [Lab Book](https://app.gitbook.com/o/wXJhB7H8YqI7f2lOgBuI/s/zOTeBR9y3RlMJ4cIdPem/).
 - For ServiceNow platform questions, see the [ServiceNow Developer Portal](https://developer.servicenow.com) and [ServiceNow Community](https://community.servicenow.com).
 
 ---
