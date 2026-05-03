@@ -108,7 +108,7 @@ After the import completes, confirm the application is working:
 
 The full lab guide for **SNU1024: REST API Security and Integration** is published on GitBook:
 
-📖 [SNU1024 Lab Guide — GitBook](https://app.gitbook.com/o/wXJhB7H8YqI7f2lOgBuI/s/zOTeBR9y3RlMJ4cIdPem/)
+📖 [SNU1024 Lab Guide — GitBook](https://servicenow-events-or-lab-guidebo.gitbook.io/servicenow-university-2026/snu1024-pc26)
 
 The GitBook covers all nine labs:
 
@@ -128,7 +128,7 @@ The GitBook covers all nine labs:
 
 This is sample educational content and is provided **as-is** with no guarantee of support. Please fork to your own account for lab use. Pull requests are not accepted.
 
-- For questions about the lab content, refer to the [Lab Book](https://app.gitbook.com/o/wXJhB7H8YqI7f2lOgBuI/s/zOTeBR9y3RlMJ4cIdPem/).
+- For questions about the lab content, refer to the [Lab Book](https://servicenow-events-or-lab-guidebo.gitbook.io/servicenow-university-2026/snu1024-pc26).
 - For ServiceNow platform questions, see the [ServiceNow Developer Portal](https://developer.servicenow.com) and [ServiceNow Community](https://community.servicenow.com).
 
 ---
